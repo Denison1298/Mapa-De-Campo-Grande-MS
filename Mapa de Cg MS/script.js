@@ -19,12 +19,10 @@ function initMap() {
 // Função para obter a localização do usuário
 function getUserLocation() {
     if (userLocation) {
-        // Se a localização já está salva no localStorage, usá-la diretamente
         L.marker(userLocation).addTo(map).bindPopup("Você está aqui").openPopup();
         map.setView(userLocation, 13);
         updateDebugInfo("Localização do usuário carregada do armazenamento.");
     } else if ("geolocation" in navigator) {
-        // Caso contrário, solicitar a localização do usuário
         navigator.geolocation.getCurrentPosition(function(position) {
             userLocation = [position.coords.latitude, position.coords.longitude];
             localStorage.setItem('userLocation', JSON.stringify(userLocation)); // Salva a localização
@@ -90,7 +88,7 @@ function startRoute() {
                 if (routingControl) {
                     map.removeControl(routingControl);  // Remove a rota anterior, se houver
                 }
-                
+
                 routingControl = L.Routing.control({
                     waypoints: [
                         L.latLng(userLocation[0], userLocation[1]),
@@ -99,11 +97,39 @@ function startRoute() {
                     routeWhileDragging: true
                 }).addTo(map);
 
+                // Adiciona evento ao concluir a rota
+                routingControl.on('routesfound', function(e) {
+                    const route = e.routes[0];
+                    alert(`Rota encontrada! Distância: ${route.summary.totalDistance / 1000} km, Duração: ${Math.round(route.summary.totalTime / 60)} minutos.`);
+                });
+
+                // Adiciona opção para cancelar a rota
+                routingControl.on('routingerror', function() {
+                    alert('Erro ao criar a rota.');
+                });
+
+                // Retorna à interface normal quando o trajeto é concluído ou cancelado
+                routingControl.on('routeselected', function() {
+                    alert('Trajeto iniciado! Para encerrar, clique no botão de cancelamento.');
+                });
+
                 updateDebugInfo(`Rota iniciada para ${location.display_name}`);
             }
         });
     } else {
         alert("Endereço de destino inválido.");
+    }
+}
+
+// Função para cancelar a rota e voltar à interface normal
+function cancelRoute() {
+    if (routingControl) {
+        map.removeControl(routingControl);  // Remove a rota do mapa
+        routingControl = null;  // Reseta o controle da rota
+        alert('Trajeto cancelado. Você voltou à interface normal.');
+        updateDebugInfo("Trajeto cancelado.");
+    } else {
+        alert("Nenhuma rota ativa para cancelar.");
     }
 }
 
@@ -215,6 +241,9 @@ document.querySelector('.close').addEventListener('click', function() {
 
 // Botão de iniciar trajeto
 document.getElementById('startRouteButton').addEventListener('click', startRoute);
+
+// Botão de cancelar trajeto
+document.getElementById('removeObstacleButton').addEventListener('click', cancelRoute);
 
 // Carregar o mapa e localização ao carregar a página
 window.onload = function() {
