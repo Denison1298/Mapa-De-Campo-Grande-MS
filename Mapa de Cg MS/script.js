@@ -16,7 +16,7 @@ function initMap() {
     displayObstacleList();  // Exibe a lista de obstáculos no canto
 }
 
-// Função para obter a localização do usuário, se necessário
+// Função para obter a localização do usuário
 function getUserLocation() {
     if (userLocation) {
         // Se a localização já está salva no localStorage, usá-la diretamente
@@ -40,23 +40,14 @@ function getUserLocation() {
     }
 }
 
-// Atualizar debug info (console na página)
-function updateDebugInfo(message) {
-    let debugInfo = document.getElementById('debugInfo');
-    debugInfo.innerHTML += `${new Date().toLocaleTimeString()}: ${message}<br>`;
-    debugInfo.scrollTop = debugInfo.scrollHeight;
-}
-
+// Função para geocodificar um endereço
 function geocodeAddress(address, callback) {
     if (!address || address.trim() === '') {
         callback("O endereço fornecido é inválido ou está vazio.");
         return;
     }
 
-    // Adicionando "Campo Grande, MS" ao endereço para restringir a busca
-    const fullAddress = `${address}, Campo Grande, MS`;
-
-    const geocodeUrl = `https://nominatim.openstreetmap.org/search?q=${encodeURIComponent(fullAddress)}&format=json&accept-language=pt-BR&limit=1`;
+    const geocodeUrl = `https://nominatim.openstreetmap.org/search?q=${encodeURIComponent(address)}, Campo Grande, MS&format=json&accept-language=pt-BR&limit=1`;
 
     fetch(geocodeUrl)
         .then(response => {
@@ -82,13 +73,54 @@ function geocodeAddress(address, callback) {
         });
 }
 
+// Função para iniciar o trajeto
+function startRoute() {
+    if (!userLocation) {
+        alert("Localização do usuário não encontrada. Por favor, permita o acesso à sua localização.");
+        return;
+    }
+
+    const destinationInput = prompt("Digite o endereço de destino:");
+
+    if (destinationInput) {
+        geocodeAddress(destinationInput, function(error, location) {
+            if (error) {
+                alert(error);
+            } else {
+                if (routingControl) {
+                    map.removeControl(routingControl);  // Remove a rota anterior, se houver
+                }
+                
+                routingControl = L.Routing.control({
+                    waypoints: [
+                        L.latLng(userLocation[0], userLocation[1]),
+                        L.latLng(location.lat, location.lon)
+                    ],
+                    routeWhileDragging: true
+                }).addTo(map);
+
+                updateDebugInfo(`Rota iniciada para ${location.display_name}`);
+            }
+        });
+    } else {
+        alert("Endereço de destino inválido.");
+    }
+}
+
+// Função para atualizar o debug info
+function updateDebugInfo(message) {
+    let debugInfo = document.getElementById('debugInfo');
+    debugInfo.innerHTML += `${new Date().toLocaleTimeString()}: ${message}<br>`;
+    debugInfo.scrollTop = debugInfo.scrollHeight;
+}
+
 // Pesquisar rua e exibir no mapa
 document.getElementById('searchButton').addEventListener('click', function() {
     let query = document.getElementById('searchInput').value;
     if (query) {
         geocodeAddress(query, function(error, location) {
             if (error) {
-                alert(error);  // Mostra o erro detalhado
+                alert(error);
             } else {
                 map.setView([location.lat, location.lon], 16);
                 L.marker([location.lat, location.lon]).addTo(map).bindPopup(location.display_name).openPopup();
@@ -137,6 +169,7 @@ document.getElementById('confirmObstacle').addEventListener('click', function() 
     }
 });
 
+// Função para adicionar obstáculo no mapa
 function addObstacleToMap(obstacle) {
     L.marker(obstacle.position, {icon: L.divIcon({className: 'obstacle-icon'})})
         .addTo(map)
@@ -179,6 +212,9 @@ document.getElementById('removeObstacleButton').addEventListener('click', functi
 document.querySelector('.close').addEventListener('click', function() {
     document.getElementById('obstacleModal').style.display = 'none';
 });
+
+// Botão de iniciar trajeto
+document.getElementById('startRouteButton').addEventListener('click', startRoute);
 
 // Carregar o mapa e localização ao carregar a página
 window.onload = function() {
