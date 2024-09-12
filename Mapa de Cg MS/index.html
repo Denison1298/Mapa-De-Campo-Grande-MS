@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mapa de Campo Grande - MS</title>
+
+    <!-- Incluindo arquivos CSS do Leaflet -->
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.7.1/dist/leaflet.css" />
+    <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+    <div id="controls">
+        <input type="text" id="searchInput" placeholder="Pesquisar rua ou local">
+        <button id="searchButton">Pesquisar</button>
+        <button id="addObstacleButton">Adicionar Obstáculo</button>
+        <button id="removeObstacleButton">Remover Obstáculo</button>
+        <button id="startRouteButton">Iniciar Trajeto</button>
+    </div>
+
+    <div id="loadingMessage">Carregando dados... Por favor, aguarde.</div>
+    <div id="streetList"></div>
+    <div id="map"></div> <!-- Elemento onde o mapa será renderizado -->
+    <div id="debugInfo"></div>
+
+    <!-- Modal para adicionar obstáculos -->
+    <div id="obstacleModal" class="modal">
+        <div class="modal-content">
+            <span class="close">&times;</span>
+            <h2>Adicionar Obstáculo</h2>
+            <p>Descreva o obstáculo que você deseja adicionar:</p>
+            <textarea id="obstacleDescription" placeholder="Descreva o obstáculo aqui..."></textarea>
+            <button id="confirmObstacle">Confirmar</button>
+        </div>
+    </div>
+
+    <!-- Bibliotecas JavaScript externas -->
+    <script src="https://unpkg.com/leaflet@1.7.1/dist/leaflet.js"></script>
+    <script src="https://unpkg.com/leaflet-routing-machine@latest/dist/leaflet-routing-machine.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/PapaParse/5.3.0/papaparse.min.js"></script>
+
+    <!-- Script principal do projeto -->
+    <script src="script.js"></script>
+</body>
+</html>
