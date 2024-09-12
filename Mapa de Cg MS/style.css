@@ -1,41 +1,174 @@
-body { 
-    font-family: Arial, sans-serif; 
-    margin: 0; 
-    padding: 0; 
+/* Reset geral para remover margens e paddings */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
 }
 
-#map { 
-    height: 60vh; /* 60% da altura da janela de visualização */
+body, html {
+    margin: 0;
+    padding: 0;
+    height: 100%; /* Garante que a página ocupe toda a altura */
+    font-family: 'Roboto', sans-serif;
+    background-color: #f4f4f4;
+    color: #333;
+}
+
+#map {
+    height: 65vh; /* Aumenta a altura do mapa */
     width: 100%;
+    margin: 0; /* Remove qualquer margem adicional */
+    padding: 0; /* Remove qualquer padding adicional */
+    border-radius: 10px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    display: block;
 }
 
-#controls { 
-    padding: 10px; 
-    background-color: #f0f0f0; 
+#controls {
+    padding: 15px;
+    background-color: #ffffff;
+    border-radius: 10px;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
     display: flex;
     flex-wrap: wrap;
+    justify-content: space-between;
+    align-items: center;
 }
 
-#searchInput { 
-    width: 200px; 
-    padding: 5px; 
+#searchInput {
+    width: 250px;
+    padding: 10px;
+    border-radius: 5px;
+    border: 1px solid #ddd;
+    font-size: 16px;
 }
 
-#searchButton, 
-#addObstacleButton, 
-#removeObstacleButton, 
-#startRouteButton { 
-    margin-left: 10px; 
-    padding: 10px 15px;
+#searchButton,
+#addObstacleButton,
+#removeObstacleButton,
+#startRouteButton {
+    padding: 10px 20px;
     border: none;
-    background-color: #007BFF; /* Azul padrão */
+    border-radius: 5px;
+    background-color: #007BFF;
     color: white;
+    font-size: 16px;
     cursor: pointer;
-    border-radius: 4px;
+    transition: background-color 0.3s ease;
 }
 
 button:hover {
-    background-color: #0056b3; /* Cor mais escura ao passar o mouse */
+    background-color: #0056b3;
+    box-shadow: 0 4px 12px rgba(0, 91, 187, 0.2);
+}
+
+#debugInfo {
+    margin-top: 10px;
+    padding: 15px;
+    background-color: #fafafa;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    height: 150px;
+    overflow-y: scroll;
+}
+
+#loadingMessage {
+    display: none;
+    color: #333;
+    margin-top: 10px;
+    text-align: center;
+    font-size: 18px;
+    font-weight: bold;
+    animation: blink 1s infinite;
+}
+
+@keyframes blink {
+    0% { opacity: 1; }
+    50% { opacity: 0.5; }
+    100% { opacity: 1; }
+}
+
+.leaflet-routing-container {
+    max-height: 350px;
+    overflow-y: auto;
+    background-color: rgba(255, 255, 255, 0.9);
+    border-radius: 5px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+.obstacle-icon {
+    background-color: #FF4500;
+    border-radius: 50%;
+    width: 24px;
+    height: 24px;
+    text-align: center;
+    line-height: 24px;
+    font-size: 14px;
+    color: white;
+    font-weight: bold;
+}
+
+#obstacleModal {
+    display: none;
+    position: fixed;
+    z-index: 1000;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0,0,0,0.5);
+}
+
+.modal-content {
+    background-color: #ffffff;
+    margin: 10% auto;
+    padding: 20px;
+    border: 1px solid #888;
+    border-radius: 10px;
+    width: 90%;
+    max-width: 600px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+    animation: fadeIn 0.3s ease-out;
+}
+
+.close {
+    color: #555;
+    float: right;
+    font-size: 28px;
+    font-weight: bold;
+    cursor: pointer;
+}
+
+.close:hover,
+.close:focus {
+    color: #000;
+    text-decoration: none;
+    cursor: pointer;
+}
+
+#obstacleDescription {
+    width: 100%;
+    height: 120px;
+    margin-top: 10px;
+    padding: 10px;
+    border-radius: 5px;
+    border: 1px solid #ddd;
+    font-size: 16px;
+}
+
+.obstacle-list {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    max-width: 300px;
+    max-height: 350px;
+    overflow-y: auto;
+    background-color: rgba(255, 255, 255, 0.95);
+    padding: 15px;
+    border-radius: 5px;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.15);
+    font-size: 16px;
+    z-index: 1000;
 }
 
 @media (max-width: 600px) {
@@ -48,124 +181,10 @@ button:hover {
         width: 100%;
     }
 
-    #searchButton, #addObstacleButton, 
+    #searchButton, #addObstacleButton,
     #removeObstacleButton, #startRouteButton {
         margin-left: 0;
         margin-top: 10px;
         width: 100%;
     }
-}
-
-#streetList { 
-    height: 200px; 
-    overflow-y: auto; 
-    border: 1px solid #ccc; 
-    margin-top: 10px; 
-    padding: 5px; 
-}
-
-#debugInfo { 
-    margin-top: 10px; 
-    padding: 10px; 
-    background-color: #e0e0e0; 
-    border: 1px solid #ccc;
-    height: 150px;
-    overflow-y: scroll;
-}
-
-#loadingMessage { 
-    display: none; 
-    color: #666; 
-    margin-top: 10px; 
-    text-align: center; 
-    font-size: 16px;
-    animation: blink 1s infinite;
-}
-
-@keyframes blink {
-    0% { opacity: 1; }
-    50% { opacity: 0.5; }
-    100% { opacity: 1; }
-}
-
-.leaflet-routing-container { 
-    max-height: 300px; 
-    overflow-y: auto; 
-}
-
-.obstacle-icon { 
-    background-color: orange; 
-    border-radius: 50%; 
-    width: 20px; 
-    height: 20px; 
-    text-align: center; 
-    line-height: 20px; 
-}
-
-#obstacleModal { 
-    display: none; 
-    position: fixed; 
-    z-index: 1000; 
-    left: 0; 
-    top: 0; 
-    width: 100%; 
-    height: 100%; 
-    background-color: rgba(0,0,0,0.4); 
-}
-
-.modal-content { 
-    background-color: #fefefe; 
-    margin: 15% auto; 
-    padding: 20px; 
-    border: 1px solid #888; 
-    width: 80%; 
-    max-width: 500px;
-    animation: fadeIn 0.3s ease-out;
-}
-
-@keyframes fadeIn {
-    from {
-        opacity: 0;
-        transform: translateY(-20px);
-    }
-    to {
-        opacity: 1;
-        transform: translateY(0);
-    }
-}
-
-.close { 
-    color: #aaa; 
-    float: right; 
-    font-size: 28px; 
-    font-weight: bold; 
-    cursor: pointer; 
-}
-
-.close:hover, 
-.close:focus { 
-    color: black; 
-    text-decoration: none; 
-    cursor: pointer; 
-}
-
-#obstacleDescription { 
-    width: 100%; 
-    height: 100px; 
-    margin-top: 10px; 
-}
-
-.obstacle-list {
-    position: absolute;
-    top: 10px;
-    right: 10px;
-    max-width: 250px;
-    max-height: 300px;
-    overflow-y: auto;
-    background-color: rgba(255, 255, 255, 0.9);
-    padding: 10px;
-    border-radius: 5px;
-    box-shadow: 0 2px 10px rgba(0,0,0,0.2);
-    font-size: 14px;
-    z-index: 1000;
 }
