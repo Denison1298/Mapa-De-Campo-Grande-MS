@@ -47,14 +47,16 @@ function updateDebugInfo(message) {
     debugInfo.scrollTop = debugInfo.scrollHeight;
 }
 
-// Função para geocodificar um endereço (em português) com tratamento de erro aprimorado
 function geocodeAddress(address, callback) {
     if (!address || address.trim() === '') {
         callback("O endereço fornecido é inválido ou está vazio.");
         return;
     }
 
-    const geocodeUrl = `https://nominatim.openstreetmap.org/search?q=${encodeURIComponent(address)}&format=json&accept-language=pt-BR&limit=1`;
+    // Adicionando "Campo Grande, MS" ao endereço para restringir a busca
+    const fullAddress = `${address}, Campo Grande, MS`;
+
+    const geocodeUrl = `https://nominatim.openstreetmap.org/search?q=${encodeURIComponent(fullAddress)}&format=json&accept-language=pt-BR&limit=1`;
 
     fetch(geocodeUrl)
         .then(response => {
