@@ -4,7 +4,6 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Mapa de Campo Grande - MS</title>
-
     <!-- Incluindo arquivos CSS do Leaflet -->
     <link rel="stylesheet" href="https://unpkg.com/leaflet@1.7.1/dist/leaflet.css" />
     <link rel="stylesheet" href="style.css" />
@@ -25,18 +24,15 @@
 
     <!-- Modal para adicionar obstáculos -->
     <div id="obstacleModal" class="modal">
-    <div class="modal-content">
-        <span class="close">&times;</span>
-        <h2>Adicionar Obstáculo</h2>
-        <p>Digite o nome da rua e a descrição do obstáculo:</p>
-        <input type="text" id="streetNameInput" placeholder="Nome da rua" />
-        <textarea id="obstacleDescription" placeholder="Descreva o obstáculo aqui..."></textarea>
-        <button id="confirmObstacle">Confirmar</button>
-    </div>
-        <div id="obstacleList" class="obstacle-list"></div>
-</div>
-
+        <div class="modal-content">
+            <span class="close">&times;</span>
+            <h2>Adicionar Obstáculo</h2>
+            <p>Digite o nome da rua e a descrição do obstáculo:</p>
+            <input type="text" id="streetNameInput" placeholder="Nome da rua" />
+            <textarea id="obstacleDescription" placeholder="Descreva o obstáculo aqui..."></textarea>
+            <button id="confirmObstacle">Confirmar</button>
         </div>
+        <div id="obstacleList" class="obstacle-list"></div>
     </div>
 
     <!-- Bibliotecas JavaScript externas -->
