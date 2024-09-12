@@ -11,7 +11,7 @@
 </head>
 <body>
     <div id="controls">
-        <input type="text" id="searchInput" placeholder="Pesquisar rua ou local">
+        <input type="text" id="searchInput" placeholder="Pesquisar rua ou local" aria-label="Campo de pesquisa para ruas ou locais">
         <button id="searchButton">Pesquisar</button>
         <button id="addObstacleButton">Adicionar Obstáculo</button>
         <button id="removeObstacleButton">Remover Obstáculo</button>
@@ -25,12 +25,17 @@
 
     <!-- Modal para adicionar obstáculos -->
     <div id="obstacleModal" class="modal">
-        <div class="modal-content">
-            <span class="close">&times;</span>
-            <h2>Adicionar Obstáculo</h2>
-            <p>Descreva o obstáculo que você deseja adicionar:</p>
-            <textarea id="obstacleDescription" placeholder="Descreva o obstáculo aqui..."></textarea>
-            <button id="confirmObstacle">Confirmar</button>
+    <div class="modal-content">
+        <span class="close">&times;</span>
+        <h2>Adicionar Obstáculo</h2>
+        <p>Digite o nome da rua e a descrição do obstáculo:</p>
+        <input type="text" id="streetNameInput" placeholder="Nome da rua" />
+        <textarea id="obstacleDescription" placeholder="Descreva o obstáculo aqui..."></textarea>
+        <button id="confirmObstacle">Confirmar</button>
+    </div>
+        <div id="obstacleList" class="obstacle-list"></div>
+</div>
+
         </div>
     </div>
 
